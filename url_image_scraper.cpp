@@ -1,30 +1,33 @@
 #include <iostream>
-#include <cstdio>
 #include <string>
 #include <regex>
+#include <bits/stdc++.h>
 using namespace std;
 
-int main(int argc, char** argv)
+int main()
 {
-    if(argc == 1)
-    {
-        cout << "No arguments given" << endl;
-    }
+    string wgetCommand = "wget -O downloadedSite.html ";
+    string website = "";
 
-    for(int i = 1; i < argc; i++)
-    {
-        string htmlFile = argv[i];
-        int size = htmlFile.length();
-        if(htmlFile.substr(size-5,size) == ".html")
-        {
-            cout << htmlFile << endl;
-            system("grep -Po '<\s*a[^>]*>(.*?)<\s*/\s*a>' " + htmlFile);
-        }
-        else
-        {
-            cout << argv[i] << ": not an HTML file" << endl;
-        }
-    }
+    const char* grep_atag = "grep -Po '(?<=href=\").+\"' downloadedSite.html";
+    const char* grep_imgtag = "grep -Po '?<=<img src=\").+\"' downloadedSite.html";
+    const char* grep_imgtagAlt = "grep -Po '(?<=alt=\").+\"' downloadedSite.html";
+    const char* command = nullptr;
+
+    // gets url from user
+    cout << "Enter a website URL:" << endl;
+    cin >> website;
+    // completes string for command and converts it to char * since system requires it
+    wgetCommand = wgetCommand + website;
+    command = wgetCommand.c_str();
+    system(command);
+    cout << "---------------------------------<a> TAGS-----------------------------------------" << endl;
+    system(grep_atag);
+    cout << "---------------------------------<img> TAGS-----------------------------------------" << endl;
+    system(grep_imgtag);
+    cout << "--------------------------------------------------------------------------" << endl;
+    system(grep_imgtagAlt);
+
 
     return 0;
 }
